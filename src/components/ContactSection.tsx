@@ -1,0 +1,181 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Loader2, CheckCircle2 } from 'lucide-react';
+
+const contactGif = new URL('../assets/contact.gif', import.meta.url).href;
+
+export function ContactSection() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('loading');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    formData.append('_subject', 'New message from Metrixova website');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xnjkperv', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json'
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        form.reset();
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <section className="py-20 bg-white" id="contact">
+      <div className="max-w-7xl mx-auto px-6">
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 text-center"
+        >
+          <h2 className="text-sm font-display text-metrix-crimson-bright uppercase tracking-[0.2em] mb-4">
+            Get in Touch
+          </h2>
+          <h3 className="text-3xl md:text-4xl font-display text-[#0B090A]">
+            Connect with our Engineering Team
+          </h3>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="grid gap-10 lg:grid-cols-2 items-center"
+        >
+          <div className="flex items-center justify-center">
+            <div className="relative w-full max-w-[420px] rounded-[28px] bg-white">
+              <motion.img
+                src={contactGif}
+                alt="Contact illustration"
+                className="w-full h-auto object-contain"
+                animate={{ y: [0, -0.08, 0], scale: [1, 1.00001, 1] }}
+                transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-3xl border border-metrix-surface/20 shadow-sm text-metrix-bg">
+            {status === 'success' ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-metrix-crimson-dark/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle2 className="text-metrix-crimson-bright w-8 h-8" />
+                </div>
+                <h4 className="text-2xl font-display text-metrix-bg mb-2">Message Sent</h4>
+                <p className="text-metrix-muted">Our team will get back to you shortly.</p>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="mt-8 px-6 py-2 bg-metrix-bg text-white rounded hover:bg-metrix-crimson-bright transition-colors text-sm"
+                >
+                  Send Another Message
+                </button>
+              </div>
+            ) : status === 'error' ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-metrix-crimson-dark/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-metrix-crimson-bright text-3xl">!</span>
+                </div>
+                <h4 className="text-2xl font-display text-metrix-bg mb-2">Submission Failed</h4>
+                <p className="text-metrix-muted">Please try again or email us directly at support@metrixova.com.</p>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="mt-8 px-6 py-2 bg-metrix-bg text-white rounded hover:bg-metrix-crimson-bright transition-colors text-sm"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4" action="https://formspree.io/f/xnjkperv" method="POST">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="firstName" className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                      First Name
+                    </label>
+                    <input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      required
+                      className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                      placeholder="Jane"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      required
+                      className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="contactEmail" className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                    Work Email
+                  </label>
+                  <input
+                    id="contactEmail"
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                    placeholder="jane@company.com"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={4}
+                    className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all resize-none"
+                    placeholder="How can we help you?"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full mt-2 bg-metrix-crimson-bright hover:bg-metrix-crimson text-white py-3 px-4 rounded font-medium transition-colors flex items-center justify-center disabled:opacity-70"
+                >
+                  {status === 'loading' ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    'Send Message'
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}

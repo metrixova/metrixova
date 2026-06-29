@@ -1,0 +1,181 @@
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, CheckCircle2, Loader2 } from 'lucide-react';
+export function EarlyAccessModal({
+  isOpen,
+  onClose
+
+
+
+}: {isOpen: boolean;onClose: () => void;}) {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  useEffect(() => {
+    if (isOpen) {
+      setStatus('idle');
+      setEmail('');
+      setName('');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    setTimeout(() => {
+      setStatus('success');
+    }, 1500);
+  };
+  return (
+    <AnimatePresence>
+      {isOpen &&
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <motion.div
+          initial={{
+            opacity: 0
+          }}
+          animate={{
+            opacity: 1
+          }}
+          exit={{
+            opacity: 0
+          }}
+          onClick={onClose}
+          className="absolute inset-0 bg-metrix-bg/80 backdrop-blur-sm" />
+        
+          <motion.div
+          initial={{
+            opacity: 0,
+            scale: 0.95,
+            y: 20
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            y: 0
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.95,
+            y: 20
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          className="relative w-full max-w-md bg-metrix-surface border border-metrix-crimson-dark rounded-xl shadow-2xl overflow-hidden">
+          
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-metrix-crimson-dark via-metrix-crimson-bright to-metrix-crimson-dark" />
+
+            <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-metrix-muted hover:text-metrix-white transition-colors"
+            aria-label="Close modal">
+            
+              <X size={20} />
+            </button>
+
+            <div className="p-8">
+              {status === 'success' ?
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 10
+              }}
+              animate={{
+                opacity: 1,
+                y: 0
+              }}
+              className="text-center py-8">
+              
+                  <div className="w-16 h-16 bg-metrix-crimson-dark/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle2 className="text-metrix-crimson-bright w-8 h-8" />
+                  </div>
+                  <h2 className="text-2xl font-display text-metrix-white mb-2">
+                    You're on the list
+                  </h2>
+                  <p className="text-metrix-muted">
+                    We'll notify you when your workspace is ready for
+                    deployment.
+                  </p>
+                  <button
+                onClick={onClose}
+                className="mt-8 w-full py-3 px-4 bg-metrix-surface border border-metrix-crimson-dark text-metrix-white rounded hover:bg-metrix-bg transition-colors font-medium">
+                
+                    Close
+                  </button>
+                </motion.div> :
+
+            <>
+                  <h2
+                id="modal-title"
+                className="text-2xl font-display text-metrix-white mb-2">
+                
+                    Request Early Access
+                  </h2>
+                  <p className="text-metrix-muted mb-8 text-sm">
+                    Join the waitlist for enterprise-grade AI observability.
+                  </p>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label
+                    htmlFor="name"
+                    className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                    
+                        Full Name
+                      </label>
+                      <input
+                    id="name"
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted/50 focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                    placeholder="Jane Doe" />
+                  
+                    </div>
+                    <div>
+                      <label
+                    htmlFor="email"
+                    className="block text-xs font-mono text-metrix-muted mb-1 uppercase tracking-wider">
+                    
+                        Work Email
+                      </label>
+                      <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted/50 focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                    placeholder="jane@company.com" />
+                  
+                    </div>
+                    <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full mt-6 bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white py-3 px-4 rounded font-medium transition-colors flex items-center justify-center disabled:opacity-70">
+                  
+                      {status === 'loading' ?
+                  <Loader2 className="w-5 h-5 animate-spin" /> :
+
+                  'Request Access'
+                  }
+                    </button>
+                  </form>
+                </>
+            }
+            </div>
+          </motion.div>
+        </div>
+      }
+    </AnimatePresence>);
+
+}
