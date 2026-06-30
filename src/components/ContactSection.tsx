@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 
 const contactGif = new URL('../assets/contact.gif', import.meta.url).href;
+const RECAPTCHA_SITE_KEY = '6LdVQj0tAAAAAIH0KPGSkG5bRrVB2s4Ral2kRLIy';
 
 export function ContactSection() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (window.grecaptcha) {
+      setRecaptchaLoaded(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setRecaptchaLoaded(true);
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,7 +37,15 @@ export function ContactSection() {
     const formData = new FormData(form);
     formData.append('_subject', 'New message from Metrixova website');
 
+    if (!window.grecaptcha || !recaptchaLoaded) {
+      setStatus('error');
+      return;
+    }
+
     try {
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'contact' });
+      formData.append('g-recaptcha-response', token);
+
       const response = await fetch('https://formspree.io/f/xnjkperv', {
         method: 'POST',
         headers: {
@@ -159,17 +189,20 @@ export function ContactSection() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={status === 'loading'}
-                  className="w-full mt-2 bg-metrix-crimson-bright hover:bg-metrix-crimson text-white py-3 px-4 rounded font-medium transition-colors flex items-center justify-center disabled:opacity-70"
-                >
-                  {status === 'loading' ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    'Send Message'
-                  )}
-                </button>
+                <div className="space-y-4">
+                  <div className="g-recaptcha" data-sitekey="6LdVQj0tAAAAAIH0KPGSkG5bRrVB2s4Ral2kRLIy" data-size="invisible" />
+                  <button
+                    type="submit"
+                    disabled={status === 'loading' || !recaptchaLoaded}
+                    className="w-full mt-2 bg-metrix-crimson-bright hover:bg-metrix-crimson text-white py-3 px-4 rounded font-medium transition-colors flex items-center justify-center disabled:opacity-70"
+                  >
+                    {status === 'loading' ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      'Send Message'
+                    )}
+                  </button>
+                </div>
               </form>
             )}
           </div>

@@ -71,7 +71,6 @@ const columns = [
     title: 'Company',
     links: [
       { label: 'About', to: '/' },
-      { label: 'Careers', to: '/' },
       { label: 'Contact', to: '/#contact' },
       { label: 'Terms & Conditions', to: '/terms' },
       { label: 'Privacy Policy', to: '/privacy' }
@@ -110,11 +109,17 @@ export function FooterSection({ onOpenModal }: {onOpenModal: () => void;}) {
                 <ul className="space-y-3">
                   {col.links.map((link) => (
                     <li key={link.label}>
-                      <Link
-                        to={link.to}
-                        className="text-sm text-metrix-muted hover:text-metrix-white transition-colors">
-                        {link.label}
-                      </Link>
+                      {col.title === 'Product' ? (
+                        <span className="text-sm text-metrix-muted opacity-60 cursor-not-allowed select-none">
+                          {link.label}
+                        </span>
+                      ) : (
+                        <Link
+                          to={link.to}
+                          className="text-sm text-metrix-muted hover:text-metrix-white transition-colors">
+                          {link.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
