@@ -48,6 +48,21 @@ const proofPoints = [
   'Designed for modern operations teams',
 ];
 
+const nvidiaHighlights = [
+  {
+    title: 'High-scale telemetry',
+    description: 'Built to ingest and interpret massive streams of operational data without losing context.',
+  },
+  {
+    title: 'Intelligent analysis',
+    description: 'Supports anomaly detection and dependency-aware reasoning that helps teams see what changed.',
+  },
+  {
+    title: 'Readable incident guidance',
+    description: 'Turns complex event patterns into clear explanations that make handoffs and response easier.',
+  },
+];
+
 export function AccessPage() {
   return (
     <main className="min-h-screen bg-metrix-bg text-metrix-white">
@@ -187,6 +202,33 @@ export function AccessPage() {
                 <p className="text-sm font-mono uppercase tracking-[0.25em] text-metrix-muted">0{index + 1}</p>
                 <h3 className="mt-3 text-lg font-semibold text-white">{step.title}</h3>
                 <p className="mt-2 text-sm leading-7 text-metrix-muted">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 md:p-10">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl border border-metrix-crimson-dark/40 bg-metrix-bg/70 p-3">
+              <BrainCircuit className="h-6 w-6 text-metrix-crimson-bright" />
+            </div>
+            <div>
+              <p className="text-sm font-mono uppercase tracking-[0.25em] text-metrix-muted">NVIDIA AI foundation</p>
+              <h2 className="text-2xl font-semibold text-white">A platform shaped for demanding observability workloads.</h2>
+            </div>
+          </div>
+
+          <p className="mt-4 max-w-3xl text-lg leading-8 text-metrix-muted">
+            Metrixova OS is built around NVIDIA AI SDKs that support the core needs of modern monitoring teams: high-volume telemetry intake, real-time analysis, and clear incident explanation.
+          </p>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {nvidiaHighlights.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-metrix-bg/60 p-5">
+                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-7 text-metrix-muted">{item.description}</p>
               </div>
             ))}
           </div>
