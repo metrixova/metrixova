@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import heroImg from '../assets/hero-web.svg';
 
 export function Hero({ onOpenModal }: { onOpenModal: () => void }) {
@@ -167,15 +168,18 @@ export function Hero({ onOpenModal }: { onOpenModal: () => void }) {
             transition={{ duration: 0.7, delay: 0.35, ease: 'easeOut' }}
             className="flex flex-col sm:flex-row items-center gap-4 mt-16 md:justify-end"
           >
-            <button
-              onClick={onOpenModal}
-              className="w-full sm:w-auto px-10 py-4 bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white rounded font-medium transition-colors text-lg"
+            <Link
+              to="/Product"
+              className="w-full sm:w-auto px-10 py-4 bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white rounded font-medium transition-colors text-lg text-center"
             >
-              Request Early Access
-            </button>
-            <button className="w-full sm:w-auto px-10 py-4 bg-transparent border border-metrix-white/30 hover:border-metrix-white text-metrix-white rounded font-medium transition-colors text-lg">
-              View Architecture
-            </button>
+              Explore the Product
+            </Link>
+            <Link
+              to="/dashboard"
+              className="w-full sm:w-auto px-10 py-4 bg-transparent border border-metrix-white/30 hover:border-metrix-white text-metrix-white rounded font-medium transition-colors text-lg text-center"
+            >
+              Open the Workspace
+            </Link>
           </motion.div>
         </div>
       </div>

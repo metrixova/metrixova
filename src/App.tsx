@@ -73,6 +73,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<><Navbar onOpenModal={handleOpenModal} theme={theme} onToggleTheme={toggleTheme} currentUser={currentUser} onRequireAuth={() => handleOpenAuthModal('/access', 'login')} /><Landing onOpenModal={handleOpenModal} /><FooterSection onOpenModal={handleOpenModal} /></>} />
           <Route path="/access" element={<><Navbar onOpenModal={handleOpenModal} theme={theme} onToggleTheme={toggleTheme} currentUser={currentUser} onRequireAuth={() => handleOpenAuthModal('/access', 'login')} /><AccessPage /></>} />
+          <Route path="/Product" element={<><Navbar onOpenModal={handleOpenModal} theme={theme} onToggleTheme={toggleTheme} currentUser={currentUser} onRequireAuth={() => handleOpenAuthModal('/access', 'login')} /><AccessPage /><FooterSection onOpenModal={handleOpenModal} /></>} />
           <Route
             path="/dashboard"
             element={

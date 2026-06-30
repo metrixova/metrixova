@@ -55,11 +55,11 @@ export function Navbar({ onOpenModal, theme, onToggleTheme, currentUser, onRequi
 
         <div className="flex items-center gap-3">
           <Link
-            to="/access"
+            to="/Product"
             className="flex items-center gap-2 border border-metrix-crimson-dark hover:border-metrix-crimson-bright bg-metrix-surface/60 hover:bg-metrix-surface text-metrix-white px-4 py-2.5 rounded text-sm font-medium transition-colors"
           >
             <LayoutDashboard className="w-4 h-4 text-metrix-crimson-bright" />
-            <span className="hidden sm:inline">Metrixova</span>
+            <span className="hidden sm:inline">Explore Product</span>
           </Link>
         </div>
       </div>
