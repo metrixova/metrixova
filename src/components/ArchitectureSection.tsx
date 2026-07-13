@@ -64,7 +64,7 @@ export function ArchitectureSection() {
     <motion.section
       ref={ref}
       style={{ scale, opacity, y }}
-      className="py-20 bg-metrix-bg border-t border-metrix-surface overflow-hidden relative">
+      className="py-12 md:py-16 lg:py-20 bg-metrix-bg border-t border-metrix-surface overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{
@@ -108,7 +108,7 @@ export function ArchitectureSection() {
                 }}
                 className="flex flex-col items-center w-48 relative group">
                 
-                  <div className="w-16 h-16 rounded-3xl bg-metrix-surface border border-metrix-crimson-dark flex items-center justify-center mb-4 group-hover:border-metrix-crimson-bright transition-colors relative z-20 overflow-hidden">
+                  <div className="w-16 h-16 rounded-3xl bg-metrix-surface border border-metrix-crimson-dark flex items-center justify-center mb-4 group-hover:border-metrix-crimson-bright transition-colors relative z-20 overflow-hidden p-2">
                     <img src={node.image} alt={node.title} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="text-sm font-bold text-metrix-white mb-2 text-center">

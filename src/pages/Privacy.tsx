@@ -27,7 +27,7 @@ export function Privacy() {
           </p>
 
           <p>
-            We use Your Personal Data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the <a href="https://www.termsfeed.com/privacy-policy-generator/" target="_blank" rel="noopener noreferrer" className="text-metrix-crimson-bright hover:underline">TermsFeed Privacy Policy Generator</a>.
+            We use Your Personal Data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.
           </p>
 
           <h2 className="text-2xl font-display text-metrix-white mt-10 mb-4">

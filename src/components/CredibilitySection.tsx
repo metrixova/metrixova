@@ -10,7 +10,7 @@ export function CredibilitySection() {
   'eBPF'];
 
   return (
-    <section className="py-20 bg-metrix-bg border-t border-metrix-surface">
+    <section className="py-12 md:py-16 lg:py-20 bg-metrix-bg border-t border-metrix-surface">
       <div className="max-w-5xl mx-auto px-6 text-center">
         <motion.h2
           initial={{

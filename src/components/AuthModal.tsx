@@ -130,7 +130,7 @@ export function AuthModal({ isOpen, initialMode = 'login', redirectPath = '/dash
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Jane Doe"
+                      placeholder="Your Name"
                       required
                       className="w-full bg-metrix-bg border border-metrix-surface/70 rounded-xl px-4 py-3 text-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright"
                     />
@@ -146,7 +146,7 @@ export function AuthModal({ isOpen, initialMode = 'login', redirectPath = '/dash
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="jane@company.com"
+                    placeholder="you@example.com"
                     required
                     className="w-full bg-metrix-bg border border-metrix-surface/70 rounded-xl px-4 py-3 text-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright"
                   />

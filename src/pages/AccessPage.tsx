@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, BarChart3, BrainCircuit, Radar, ShieldCheck, Sparkles, Workflow, type LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 
 type Pillar = {
   title: string;
@@ -63,12 +64,79 @@ const nvidiaHighlights = [
   },
 ];
 
-export function AccessPage() {
+export function AccessPage({ onOpenModal }: { onOpenModal: () => void }) {
+  const navigate = useNavigate();
+
+  const handleOpenWorkspace = () => {
+    if (auth.currentUser) {
+      navigate('/dashboard');
+    } else {
+      window.open(`${window.location.origin}/#/login?redirect=/dashboard`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleBookDemo = () => {
+    // Navigate home and pass a flag via router state so the home page
+    // can scroll to #contact once it has actually mounted.
+    navigate('/', { state: { scrollTo: 'contact' } });
+
+    // Fallback in case the home page doesn't consume location.state
+    // (e.g. it's already mounted and won't re-run its effect).
+    let attempts = 0;
+    const tryScroll = () => {
+      const contactSection = document.getElementById('contact');
+      if (contactSection) {
+        const navbarEl = document.querySelector('header');
+        const navbarHeight = navbarEl ? Math.ceil((navbarEl as HTMLElement).getBoundingClientRect().height) : 88;
+        const top = window.scrollY + contactSection.getBoundingClientRect().top - navbarHeight - 8;
+        window.scrollTo({ top, behavior: 'smooth' });
+        return;
+      }
+      attempts += 1;
+      if (attempts < 10) {
+        window.setTimeout(tryScroll, 150);
+      } else {
+        onOpenModal();
+      }
+    };
+    window.setTimeout(tryScroll, 150);
+  };
+
   return (
     <main className="min-h-screen bg-metrix-bg text-metrix-white">
+      <section className="mx-auto mb-6 max-w-7xl px-6 pt-6 lg:px-8">
+        <div className="mb-4 flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-metrix-surface/80 p-4 shadow-xl md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-mono uppercase tracking-[0.3em] text-metrix-muted">Metrixova Pulse access</p>
+            <p className="mt-2 text-lg font-semibold text-white">Continue to the Metrixova Pulse workspace</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 md:justify-end">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-metrix-white transition-colors hover:border-metrix-crimson-bright/40 hover:bg-white/10"
+            >
+              Home
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                if (auth.currentUser) {
+                  navigate('/dashboard');
+                } else {
+                  window.open(`${window.location.origin}/#/login?redirect=/dashboard`, '_blank', 'noopener,noreferrer');
+                }
+              }}
+              className="inline-flex items-center justify-center rounded-full bg-metrix-crimson-bright px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-metrix-crimson"
+            >
+              Launch Dashboard
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(229,56,59,0.2),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_25%)]" />
-        <div className="mx-auto max-w-7xl px-6 pb-20 pt-28 md:pt-36 lg:px-8">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(229,56,59,0.2),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.05),transparent_25%)]" />
+        <div className="mx-auto max-w-7xl px-6 pb-20 pt-8 md:pt-12 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -78,29 +146,31 @@ export function AccessPage() {
             >
               <p className="inline-flex items-center gap-2 rounded-full border border-metrix-crimson-dark/50 bg-metrix-surface/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.3em] text-metrix-muted">
                 <Sparkles className="h-3.5 w-3.5 text-metrix-crimson-bright" />
-                New • Metrixova OS
+                New • Metrixova Pulse
               </p>
               <h1 className="mt-6 text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
                 Turn every alert into a clear next move.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-metrix-muted">
-                Metrixova OS helps teams move from scattered signals to shared understanding, so incidents feel measurable, actionable, and calm.
+                Metrixova Pulse helps teams move from scattered signals to shared understanding, so incidents feel measurable, actionable, and calm.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to="/dashboard"
+              <div className="relative z-20 mt-8 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={handleOpenWorkspace}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-metrix-crimson-bright px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-metrix-crimson"
                 >
-                  Launch the live product
+                  Open Workspace
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/"
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBookDemo}
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-metrix-white transition-colors hover:border-metrix-crimson-bright/40 hover:bg-white/10"
                 >
-                  Explore the overview
-                </Link>
+                  Book a Demo
+                </button>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-2">
@@ -221,7 +291,7 @@ export function AccessPage() {
           </div>
 
           <p className="mt-4 max-w-3xl text-lg leading-8 text-metrix-muted">
-            Metrixova OS is built around NVIDIA AI SDKs that support the core needs of modern monitoring teams: high-volume telemetry intake, real-time analysis, and clear incident explanation.
+            Metrixova Pulse is built around NVIDIA AI SDKs that support the core needs of modern monitoring teams: high-volume telemetry intake, real-time analysis, and clear incident explanation.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -284,15 +354,22 @@ export function AccessPage() {
         <div className="flex flex-col gap-6 rounded-[2rem] border border-metrix-crimson-dark/40 bg-gradient-to-r from-metrix-crimson/20 to-white/5 p-8 md:flex-row md:items-center md:justify-between md:p-10">
           <div>
             <p className="text-sm font-mono uppercase tracking-[0.3em] text-metrix-muted">Ready to experience it?</p>
-            <h2 className="mt-3 text-3xl font-display text-white sm:text-4xl">See how Metrixova OS helps your team stay ahead.</h2>
+            <h2 className="mt-3 text-3xl font-display text-white sm:text-4xl">See how Metrixova Pulse helps your team stay ahead.</h2>
           </div>
-          <Link
-            to="/dashboard"
+          <button
+            type="button"
+            onClick={() => {
+              if (auth.currentUser) {
+                navigate('/dashboard');
+              } else {
+                window.open(`${window.location.origin}/#/login?redirect=/dashboard`, '_blank', 'noopener,noreferrer');
+              }
+            }}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-metrix-crimson-bright px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-metrix-crimson"
           >
             Open the product
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </button>
         </div>
       </section>
     </main>

@@ -11,12 +11,15 @@
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
+    "@studio-freight/lenis": "^1.0.42",
     "firebase": "^12.15.0",
     "framer-motion": "^11.5.4",
     "lucide-react": "0.522.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-router-dom": "^6.26.2",
+    "react-tsparticles": "^2.12.2",
+    "tsparticles-slim": "^2.12.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.18",

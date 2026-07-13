@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 export function PricingSection() {
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(false);
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
   const tiers = [
   {
     name: 'Starter',
     desc: 'Infrastructure monitoring for small teams.',
     monthlyPrice: 39,
-    annualPrice: 374,
+    annualPrice: 31,
     monthlyLink: 'https://buy.stripe.com/test_7sYfZh6gfdjncHI0FEeUU00',
     annualLink: 'https://buy.stripe.com/test_3cI5kDcED5QV5fg5ZYeUU01',
     features: [
@@ -24,7 +27,7 @@ export function PricingSection() {
     name: 'Growth',
     desc: 'Full observability stack with AI correlation.',
     monthlyPrice: 89,
-    annualPrice: 854,
+    annualPrice: 71,
     monthlyLink: 'https://buy.stripe.com/test_aFa28r9sr0wB8rs3RQeUU02',
     annualLink: 'https://buy.stripe.com/test_9B65kDfQPa7b0Z0ageeUU03',
     features: [
@@ -54,7 +57,7 @@ export function PricingSection() {
 
   return (
     <section
-      className="py-20 bg-metrix-bg border-t border-metrix-surface"
+      className="py-12 md:py-16 lg:py-20 bg-metrix-bg border-t border-metrix-surface"
       id="pricing">
       
       <div className="max-w-7xl mx-auto px-6">
@@ -153,6 +156,23 @@ export function PricingSection() {
                   className={`w-full py-3 rounded font-medium transition-colors mb-8 inline-flex items-center justify-center ${tier.popular ? 'bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white' : 'bg-metrix-bg border border-metrix-crimson-dark hover:border-metrix-crimson-bright text-metrix-white'}`}>
                   {tier.cta}
                 </a>
+              ) : tier.cta === 'Contact Sales' ? (
+                <Link
+                  to={isLanding ? '#contact' : { pathname: '/', hash: '#contact' }}
+                  onClick={(e) => {
+                    if (isLanding) {
+                      e.preventDefault();
+                      const el = document.getElementById('contact');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                        window.history.pushState(null, '', `${window.location.pathname}#contact`);
+                      }
+                    }
+                  }}
+                  className="w-full py-3 rounded font-medium transition-colors mb-8 inline-flex items-center justify-center bg-metrix-bg border border-metrix-crimson-dark hover:border-metrix-crimson-bright text-metrix-white"
+                >
+                  {tier.cta}
+                </Link>
               ) : (
                 <button
                   className={`w-full py-3 rounded font-medium transition-colors mb-8 ${tier.popular ? 'bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white' : 'bg-metrix-bg border border-metrix-crimson-dark hover:border-metrix-crimson-bright text-metrix-white'}`}>

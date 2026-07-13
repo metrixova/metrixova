@@ -1,9 +1,9 @@
 import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
+import { signOut, type User } from 'firebase/auth';
 import { auth } from '../firebase';
 
-export function DashboardNavbar() {
+export function DashboardNavbar({ currentUser }: { currentUser: User | null }) {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -11,9 +11,25 @@ export function DashboardNavbar() {
     navigate('/access', { replace: true });
   };
 
+  const profileName = currentUser?.displayName?.trim() || currentUser?.email?.split('@')[0] || 'Account';
+  const profileEmail = currentUser?.email || 'Signed in';
+
   return (
     <header className="sticky top-0 z-40 border-b border-[#E5E7EB] bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#BA181B] to-[#7F1D1D] text-sm font-semibold text-white">
+            {currentUser?.photoURL ? (
+              <img src={currentUser.photoURL} alt={profileName} className="h-full w-full object-cover" />
+            ) : (
+              profileName.charAt(0).toUpperCase()
+            )}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[#1E1E20]">{profileName}</p>
+            <p className="text-xs text-[#6B7280]">{profileEmail}</p>
+          </div>
+        </div>
 
         <button
           type="button"

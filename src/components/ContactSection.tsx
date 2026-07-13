@@ -8,24 +8,60 @@ const RECAPTCHA_SITE_KEY = '6LdVQj0tAAAAAIH0KPGSkG5bRrVB2s4Ral2kRLIy';
 export function ContactSection() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [recaptchaWidgetId, setRecaptchaWidgetId] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    if (window.grecaptcha) {
-      setRecaptchaLoaded(true);
+    let mounted = true;
+
+    const renderRecaptcha = () => {
+      const grecaptcha = (window as any).grecaptcha;
+      const container = document.getElementById('recaptcha');
+      if (!grecaptcha || !container || typeof grecaptcha.render !== 'function') return;
+      try {
+        const id = grecaptcha.render('recaptcha', { sitekey: RECAPTCHA_SITE_KEY, theme: 'light' });
+        if (mounted) {
+          setRecaptchaWidgetId(id);
+          setRecaptchaLoaded(true);
+        }
+      } catch (e) {
+        // ignore render errors
+      }
+    };
+
+    if ((window as any).grecaptcha && (window as any).grecaptcha.render) {
+      renderRecaptcha();
       return;
     }
 
+    // expose onload callback for the grecaptcha API and poll as a fallback
+    (window as any).__grecaptchaOnLoad = renderRecaptcha;
+
     const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.src = 'https://www.google.com/recaptcha/api.js?onload=__grecaptchaOnLoad&render=explicit';
     script.async = true;
     script.defer = true;
-    script.onload = () => setRecaptchaLoaded(true);
     document.body.appendChild(script);
 
+    let attempts = 0;
+    const timer = setInterval(() => {
+      attempts += 1;
+      if ((window as any).grecaptcha && (window as any).grecaptcha.render) {
+        renderRecaptcha();
+        clearInterval(timer);
+      } else if (attempts > 12) {
+        clearInterval(timer);
+      }
+    }, 300);
+
     return () => {
-      document.body.removeChild(script);
+      mounted = false;
+      if (script.parentNode) script.parentNode.removeChild(script);
+      clearInterval(timer);
+      try {
+        delete (window as any).__grecaptchaOnLoad;
+      } catch {}
     };
   }, []);
 
@@ -37,14 +73,19 @@ export function ContactSection() {
     const formData = new FormData(form);
     formData.append('_subject', 'New message from Metrixova website');
 
-    if (!window.grecaptcha || !recaptchaLoaded) {
-      setStatus('error');
-      return;
-    }
-
-    try {
-      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'contact' });
-      formData.append('g-recaptcha-response', token);
+      try {
+      if ((window as any).grecaptcha && recaptchaLoaded) {
+        const grecaptcha = (window as any).grecaptcha;
+        let token = '';
+        if (recaptchaWidgetId !== null && typeof grecaptcha.getResponse === 'function') {
+          token = grecaptcha.getResponse(recaptchaWidgetId);
+        }
+        if (!token) {
+          setStatus('error');
+          return;
+        }
+        formData.append('g-recaptcha-response', token);
+      }
 
       const response = await fetch('https://formspree.io/f/xnjkperv', {
         method: 'POST',
@@ -66,7 +107,7 @@ export function ContactSection() {
   };
 
   return (
-    <section className="py-20 bg-white" id="contact">
+    <section className="py-12 md:py-16 lg:py-20 bg-metrix-bg" id="contact">
       <div className="max-w-7xl mx-auto px-6">
 
         <motion.div
@@ -78,7 +119,7 @@ export function ContactSection() {
           <h2 className="text-sm font-display text-metrix-crimson-bright uppercase tracking-[0.2em] mb-4">
             Get in Touch
           </h2>
-          <h3 className="text-3xl md:text-4xl font-display text-[#0B090A]">
+          <h3 className="text-3xl md:text-4xl font-display text-metrix-white">
             Connect with our Engineering Team
           </h3>
         </motion.div>
@@ -90,7 +131,7 @@ export function ContactSection() {
           className="grid gap-10 lg:grid-cols-2 items-center"
         >
           <div className="flex items-center justify-center">
-            <div className="relative w-full max-w-[420px] rounded-[28px] bg-white">
+            <div className="relative w-full max-w-[420px] rounded-[28px] bg-metrix-surface">
               <motion.img
                 src={contactGif}
                 alt="Contact illustration"
@@ -101,17 +142,17 @@ export function ContactSection() {
             </div>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl border border-metrix-surface/20 shadow-sm text-metrix-bg">
+          <div className="bg-metrix-surface p-8 rounded-3xl border border-metrix-surface shadow-sm text-metrix-white">
             {status === 'success' ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-metrix-crimson-dark/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <CheckCircle2 className="text-metrix-crimson-bright w-8 h-8" />
                 </div>
-                <h4 className="text-2xl font-display text-metrix-bg mb-2">Message Sent</h4>
+                <h4 className="text-2xl font-display text-metrix-white mb-2">Message Sent</h4>
                 <p className="text-metrix-muted">Our team will get back to you shortly.</p>
                 <button
                   onClick={() => setStatus('idle')}
-                  className="mt-8 px-6 py-2 bg-metrix-bg text-white rounded hover:bg-metrix-crimson-bright transition-colors text-sm"
+                  className="mt-8 px-6 py-2 bg-metrix-crimson-bright text-white rounded hover:bg-metrix-crimson transition-colors text-sm"
                 >
                   Send Another Message
                 </button>
@@ -121,11 +162,11 @@ export function ContactSection() {
                 <div className="w-16 h-16 bg-metrix-crimson-dark/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-metrix-crimson-bright text-3xl">!</span>
                 </div>
-                <h4 className="text-2xl font-display text-metrix-bg mb-2">Submission Failed</h4>
+                <h4 className="text-2xl font-display text-metrix-white mb-2">Submission Failed</h4>
                 <p className="text-metrix-muted">Please try again or email us directly at support@metrixova.com.</p>
                 <button
                   onClick={() => setStatus('idle')}
-                  className="mt-8 px-6 py-2 bg-metrix-bg text-white rounded hover:bg-metrix-crimson-bright transition-colors text-sm"
+                  className="mt-8 px-6 py-2 bg-metrix-crimson-bright text-white rounded hover:bg-metrix-crimson transition-colors text-sm"
                 >
                   Try Again
                 </button>
@@ -142,8 +183,8 @@ export function ContactSection() {
                       name="firstName"
                       type="text"
                       required
-                      className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
-                      placeholder="Jane"
+                      className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                      placeholder="Your Name"
                     />
                   </div>
                   <div>
@@ -155,8 +196,8 @@ export function ContactSection() {
                       name="lastName"
                       type="text"
                       required
-                      className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
-                      placeholder="Doe"
+                      className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                      placeholder="Your Last Name"
                     />
                   </div>
                 </div>
@@ -170,8 +211,8 @@ export function ContactSection() {
                     name="email"
                     type="email"
                     required
-                    className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
-                    placeholder="jane@company.com"
+                    className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all"
+                    placeholder="you@example.com"
                   />
                 </div>
 
@@ -184,16 +225,16 @@ export function ContactSection() {
                     name="message"
                     required
                     rows={4}
-                    className="w-full bg-white border border-metrix-surface/20 rounded px-4 py-3 text-metrix-bg placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all resize-none"
+                    className="w-full bg-metrix-bg border border-metrix-crimson-dark/50 rounded px-4 py-3 text-metrix-white placeholder:text-metrix-muted focus:outline-none focus:border-metrix-crimson-bright focus:ring-1 focus:ring-metrix-crimson-bright transition-all resize-none"
                     placeholder="How can we help you?"
                   />
                 </div>
+                <div id="recaptcha" className="flex justify-center my-4" style={{ minHeight: 72 }} />
 
                 <div className="space-y-4">
-                  <div className="g-recaptcha" data-sitekey="6LdVQj0tAAAAAIH0KPGSkG5bRrVB2s4Ral2kRLIy" data-size="invisible" />
                   <button
                     type="submit"
-                    disabled={status === 'loading' || !recaptchaLoaded}
+                    disabled={status === 'loading'}
                     className="w-full mt-2 bg-metrix-crimson-bright hover:bg-metrix-crimson text-white py-3 px-4 rounded font-medium transition-colors flex items-center justify-center disabled:opacity-70"
                   >
                     {status === 'loading' ? (

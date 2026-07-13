@@ -5,7 +5,9 @@ import { ArchitectureSection } from '../components/ArchitectureSection';
 import { CapabilitiesSection } from '../components/CapabilitiesSection';
 import { UseCasesSection } from '../components/UseCasesSection';
 import { PricingSection } from '../components/PricingSection';
+import { TestimonialsSection } from '../components/TestimonialsSection';
 import { CredibilitySection } from '../components/CredibilitySection';
+import { FAQSection } from '../components/FAQSection';
 import { ContactSection } from '../components/ContactSection';
 export function Landing({ onOpenModal }: {onOpenModal: () => void;}) {
   return (
@@ -19,7 +21,9 @@ export function Landing({ onOpenModal }: {onOpenModal: () => void;}) {
           <CapabilitiesSection />
           <UseCasesSection />
           <PricingSection />
+          <TestimonialsSection />
           <CredibilitySection />
+          <FAQSection />
           <ContactSection />
         </div>
       </div>

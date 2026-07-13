@@ -71,26 +71,49 @@ const personas = [
   }
 ];
 
+const sectionVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const tabListVariants = {
+  hidden: { opacity: 0, x: -28 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, delayChildren: 0.1, staggerChildren: 0.08 } },
+};
+
+const tabItemVariants = {
+  hidden: { opacity: 0, x: -16 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.35 } },
+};
+
+const contentVariants = {
+  hidden: { opacity: 0, x: 28 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.45 } },
+  exit: { opacity: 0, x: -28, transition: { duration: 0.3 } },
+};
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, delay: 0.1 } },
+};
+
+const imageRevealVariants = {
+  hidden: { opacity: 0, scale: 0.98, clipPath: 'inset(20% 20% 20% 20%)' },
+  visible: { opacity: 1, scale: 1, clipPath: 'inset(0% 0% 0% 0%)', transition: { duration: 0.55, ease: 'easeOut' } },
+};
+
 export function UseCasesSection() {
   const [activeTab, setActiveTab] = useState(personas[0].id);
   const activePersona = personas.find((p) => p.id === activeTab)!;
   return (
-    <section id="usecases" className="py-20 bg-metrix-bg border-t border-metrix-surface">
+    <motion.section id="usecases" className="py-12 md:py-16 lg:py-20 bg-metrix-bg border-t border-metrix-surface" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={sectionVariants}>
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20
-          }}
-          whileInView={{
-            opacity: 1,
-            y: 0
-          }}
-          viewport={{
-            once: true
-          }}
-          className="mb-12">
-          
+        <motion.div variants={titleVariants} className="mb-12">
           <h2 className="text-sm font-display text-metrix-muted uppercase tracking-[0.2em] mb-4">
             Built For
           </h2>
@@ -98,68 +121,56 @@ export function UseCasesSection() {
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Tabs */}
-          <div className="lg:w-1/3 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-2 pb-4 lg:pb-0 hide-scrollbar">
+          <motion.div variants={tabListVariants} className="lg:w-1/3 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-2 pb-4 lg:pb-0 hide-scrollbar">
             {personas.map((persona) => {
               const isActive = activeTab === persona.id;
               return (
-                <button
+                <motion.button
                   key={persona.id}
+                  variants={tabItemVariants}
                   onClick={() => setActiveTab(persona.id)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left whitespace-nowrap lg:whitespace-normal transition-all ${isActive ? 'bg-metrix-surface border border-metrix-crimson-dark/50 text-metrix-white' : 'text-metrix-muted hover:text-metrix-light hover:bg-metrix-surface/50 border border-transparent'}`}>
-                  
                   <persona.icon
                     className={`w-5 h-5 ${isActive ? 'text-metrix-crimson-bright' : 'text-metrix-muted'}`} />
-                  
                   <span className="text-sm font-medium">{persona.label}</span>
-                </button>);
-
+                </motion.button>
+              );
             })}
-          </div>
+          </motion.div>
 
           {/* Content Area */}
           <div className="lg:w-2/3">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}
-                initial={{
-                  opacity: 0,
-                  x: 20
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -20
-                }}
-                transition={{
-                  duration: 0.3
-                }}
-                className="bg-metrix-surface rounded-xl border border-metrix-surface p-8 h-full flex flex-col">
-                
-                <div className="mb-8">
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="bg-metrix-surface rounded-xl border border-metrix-surface p-8 h-full flex flex-col overflow-hidden"
+              >
+                <motion.div variants={revealVariants} className="mb-8">
                   <h3 className="text-2xl font-display text-metrix-white mb-3">
                     {activePersona.label}
                   </h3>
                   <p className="text-metrix-light leading-relaxed">
                     {activePersona.desc}
                   </p>
-                </div>
+                </motion.div>
 
                 {/* Section Image */}
-                <div className="flex-1 rounded-lg overflow-hidden">
+                <motion.div variants={imageRevealVariants} className="flex-1 rounded-lg overflow-hidden">
                   <img
                     src={activePersona.image}
                     alt={`${activePersona.label} illustration`}
                     className="w-full h-full object-cover rounded-lg"
                   />
-                </div>
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
       </div>
-    </section>);
-
+    </motion.section>
+  );
 }

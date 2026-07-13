@@ -8,6 +8,11 @@
 
 /* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+}
+
 body {
   /* updated to match new theme background for better visibility */
   background-color: #050505;
@@ -54,6 +59,23 @@ body {
   backdrop-filter: none;
   border: none;
   box-shadow: none;
+}
+
+section[id], [id] {
+  scroll-margin-top: 9rem;
+}
+
+section[id] {
+  position: relative;
+}
+
+section[id]::before {
+  content: '';
+  display: block;
+  height: 9rem;
+  margin-top: -9rem;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 ::selection {
