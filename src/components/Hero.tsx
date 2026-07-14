@@ -70,7 +70,7 @@ export function Hero({ onOpenModal }: { onOpenModal: () => void }) {
               to="/access"
               className="w-full sm:w-auto px-10 py-4 sm:px-12 sm:py-5 bg-metrix-crimson-bright hover:bg-metrix-crimson text-metrix-white rounded font-semibold transition-colors text-base sm:text-lg text-center"
             >
-              MetriX
+              Metrixova OS
             </Link>
             <Link
               to={{ pathname: '/', hash: '#pricing' }}

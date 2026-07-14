@@ -178,7 +178,7 @@ export function Navbar({ onOpenModal, theme, onToggleTheme, currentUser, onRequi
             className="hidden sm:inline-flex items-center gap-2 rounded-full border border-metrix-crimson-dark hover:border-metrix-crimson-bright bg-metrix-surface/60 hover:bg-metrix-surface text-metrix-white px-4 py-2.5 text-sm font-medium transition-colors"
           >
             <LayoutDashboard className="w-4 h-4 text-metrix-crimson-bright" />
-            <span>MetriX</span>
+            <span>Metrixova OS</span>
           </Link>
         </div>
       </div>

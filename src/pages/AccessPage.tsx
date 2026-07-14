@@ -107,8 +107,8 @@ export function AccessPage({ onOpenModal }: { onOpenModal: () => void }) {
       <section className="mx-auto mb-6 max-w-7xl px-6 pt-6 lg:px-8">
         <div className="mb-4 flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-metrix-surface/80 p-4 shadow-xl md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
-            <p className="text-sm font-mono uppercase tracking-[0.3em] text-metrix-muted">Metrixova Pulse access</p>
-            <p className="mt-2 text-lg font-semibold text-white">Continue to the Metrixova Pulse workspace</p>
+            <p className="text-sm font-mono uppercase tracking-[0.3em] text-metrix-muted">Metrixova OS access</p>
+            <p className="mt-2 text-lg font-semibold text-white">Continue to the Metrixova OS workspace</p>
           </div>
           <div className="flex flex-wrap items-center gap-3 md:justify-end">
             <Link
@@ -146,13 +146,13 @@ export function AccessPage({ onOpenModal }: { onOpenModal: () => void }) {
             >
               <p className="inline-flex items-center gap-2 rounded-full border border-metrix-crimson-dark/50 bg-metrix-surface/70 px-3 py-1.5 text-xs font-mono uppercase tracking-[0.3em] text-metrix-muted">
                 <Sparkles className="h-3.5 w-3.5 text-metrix-crimson-bright" />
-                New • Metrixova Pulse
+                New • Metrixova OS
               </p>
               <h1 className="mt-6 text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
                 Turn every alert into a clear next move.
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-metrix-muted">
-                Metrixova Pulse helps teams move from scattered signals to shared understanding, so incidents feel measurable, actionable, and calm.
+                Metrixova OS helps teams move from scattered signals to shared understanding, so incidents feel measurable, actionable, and calm.
               </p>
 
               <div className="relative z-20 mt-8 flex flex-col gap-3 sm:flex-row">
@@ -291,7 +291,7 @@ export function AccessPage({ onOpenModal }: { onOpenModal: () => void }) {
           </div>
 
           <p className="mt-4 max-w-3xl text-lg leading-8 text-metrix-muted">
-            Metrixova Pulse is built around NVIDIA AI SDKs that support the core needs of modern monitoring teams: high-volume telemetry intake, real-time analysis, and clear incident explanation.
+            Metrixova OS is built around NVIDIA AI SDKs that support the core needs of modern monitoring teams: high-volume telemetry intake, real-time analysis, and clear incident explanation.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -354,7 +354,7 @@ export function AccessPage({ onOpenModal }: { onOpenModal: () => void }) {
         <div className="flex flex-col gap-6 rounded-[2rem] border border-metrix-crimson-dark/40 bg-gradient-to-r from-metrix-crimson/20 to-white/5 p-8 md:flex-row md:items-center md:justify-between md:p-10">
           <div>
             <p className="text-sm font-mono uppercase tracking-[0.3em] text-metrix-muted">Ready to experience it?</p>
-            <h2 className="mt-3 text-3xl font-display text-white sm:text-4xl">See how Metrixova Pulse helps your team stay ahead.</h2>
+            <h2 className="mt-3 text-3xl font-display text-white sm:text-4xl">See how Metrixova OS helps your team stay ahead.</h2>
           </div>
           <button
             type="button"
