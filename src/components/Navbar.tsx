@@ -213,7 +213,7 @@ export function Navbar({ onOpenModal, theme, onToggleTheme, currentUser, onRequi
               onClick={() => setMenuOpen(false)}
               className="mt-2 rounded-xl border border-metrix-crimson-bright/40 bg-metrix-crimson-bright/90 px-3 py-2.5 text-base font-semibold text-white shadow-lg shadow-metrix-crimson-bright/20 transition-colors hover:bg-metrix-crimson-bright"
             >
-              MatriX
+              Metrixova OS
             </Link>
           </div>
         </div>
