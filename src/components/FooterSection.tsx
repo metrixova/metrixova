@@ -139,11 +139,11 @@ export function FooterSection({ onOpenModal }: {onOpenModal: () => void;}) {
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="w-4 h-4 text-metrix-crimson-bright" />
-                  <span>2049 Century Park E, Los Angeles, CA 90067, USA</span>
+                  <span>667 Polk St, San Francisco, CA 94102, USA</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-metrix-crimson-bright" />
-                  <span>+1 (310) 661-5248</span>
+                  <span>+1 360 914 3971</span>
                 </div>
               </div>
             </div>
